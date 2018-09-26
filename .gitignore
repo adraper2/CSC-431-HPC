@@ -5,12 +5,3 @@
 *.i*86
 *.x86_64
 *.hex
-
-# Ignore all
-*
-
-# Unignore all with extensions
-!*.*
-
-# Unignore all dirs
-!*/
