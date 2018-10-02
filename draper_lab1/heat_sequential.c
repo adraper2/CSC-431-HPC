@@ -68,7 +68,7 @@ int main(){
 
     gfx_flush();
 
-    // for one step in the simulation
+    // for one step in the simulation (part to parallelize)
     for(int x = 1; x < SZ - 1; x++){
       for(int y = 1; y < SZ - 1; y++){
         new_grid[x][y] = old_grid[x][y] + K * (old_grid[x+1][y] + old_grid[x][y+1] + old_grid[x-1][y] + old_grid[x][y-1] - 4 * old_grid[x][y]);
@@ -83,6 +83,8 @@ int main(){
         }
       }
     }
+
+    //INSERT CHECK DELTA THRESHOLD
 
     // copy new grid to old grid
     for(int x = 0; x<SZ; x++){
