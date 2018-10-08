@@ -1,3 +1,7 @@
+// Aidan Draper
+// CSC 431 Lab 1 - HEAT
+// October 1st, 2018
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
