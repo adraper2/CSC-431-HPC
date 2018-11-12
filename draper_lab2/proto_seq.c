@@ -7,12 +7,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 void makeBase4(int base10, char *base4, int r);
 void showWalk(char *walk, int r);
 int doWalk(char *walk, char *proto, int r);
 int checkSelfAvoid(int *past, int r);
 int getScore(int *past, char *proto, int r);
+void visualizeWalk(int walk, int r, char *proto);
 
 // Parameters for Prototein walks
 int overlaps = 0; // number of non-self avoiding walks
@@ -30,6 +32,10 @@ int main(int argc, char **argv){
 
 	int maxWalks[(int)pow(4,r-1)]; // indices of max score walks
 	int maxCount = 0;
+
+	 // init time structures
+  	struct timespec start, end;
+  	clock_gettime(CLOCK_MONOTONIC_RAW, &start); // get first instance of time
 
 	for(int base10=0; base10 < (int)pow(4,r-1); base10++){
 		//printf("%d ",base10);
@@ -54,6 +60,12 @@ int main(int argc, char **argv){
 		}
 
 	}
+	clock_gettime(CLOCK_MONOTONIC_RAW, &end); // get second instance of time
+
+  	// compute time in milliseconds and convert to ull 64 bit (from in-class example)
+  	unsigned long long ellapsed = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
+
+  	printf("The sequential program took %llu ms\n", ellapsed);
 
 	printf("\nThe max score was %d at walks", maxScore);
 
@@ -61,7 +73,14 @@ int main(int argc, char **argv){
 		printf(" %d",maxWalks[i]);
 	}
 
-	printf(".\n\nThere were %d self-avoiding walks.\n\n", ((int)pow(4,r-1)) - overlaps);
+	printf(".\n\n Here are three of them for reference:\n\n");
+
+	for (int i = 0; i < 3; i++){
+		visualizeWalk(maxWalks[i], r, proto);
+	}
+
+
+	//printf("\n\nThere were %d self-avoiding walks.\n\n", ((int)pow(4,r-1)) - overlaps);
 
 
 }
@@ -160,6 +179,59 @@ int getScore(int *past, char *proto, int r){
 		}
 	}
 	return score;
+}
+
+void visualizeWalk(int walk, int r, char *proto){
+	char base4[r-1];
+	makeBase4(walk, base4, r);
+
+	char gridXY[r*2][r*2];
+
+	for(int i = 0; i < r*2; i++){
+		for(int j = 0; j < r*2; j++){
+			gridXY[i][j] = ' ';
+		}
+	}	
+
+
+	gridXY[r][r] = 'H';
+
+	int xPos = r;
+	int yPos = r;
+
+	for(int x = 0; x < strlen(base4); x++){
+		if(base4[x] == '0'){ // North
+			
+			xPos += 1;
+			gridXY[xPos][yPos] = proto[x];
+
+		} else if(base4[x] == '1'){ // South
+
+			xPos -= 1;
+			gridXY[xPos][yPos] = proto[x];
+
+		} else if(base4[x] == '2'){ // East
+
+			yPos += 1;
+			gridXY[xPos][yPos] = proto[x];
+
+		} else if(base4[x] == '3'){ // West
+
+			yPos -= 1;
+			gridXY[xPos][yPos] = proto[x];
+		}
+	}
+
+	for(int i = 0; i < r*2; i++){
+		for(int j = 0; j < r*2; j++){
+			printf("%c",gridXY[i][j]);
+		}
+		printf("\n");
+	}	
+
+	printf("\n");
+	
+	printf("That was for the walk with directions: %s\n", base4);
 }
 
 
