@@ -172,7 +172,4 @@ int main() {
       if (c == 'q') break;
    }
 }
-/* ssh -Y draper@10.52.1.13 */
 /* gcc -o kmeans kmeans.c gfx.c -I/usr/X11/include -L/usr/X11/lib -lX11 -lm */
-/* ./kmeans < data_1000_800.txt */
-
